@@ -1,0 +1,1142 @@
+<!doctype html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<meta
+			name="description"
+			content="수능 과목을 카드로 돌파하는 덱빌딩 RPG"
+		/>
+		<title>수능의 탑</title>
+		<style>
+			:root {
+				color-scheme: dark;
+				--bg: #101012;
+				--panel: #19191e;
+				--line: #33333b;
+				--ink: #f6f2e9;
+				--muted: #abaab5;
+				--gold: #f6cb74;
+				--blue: #8ad6ff;
+				--pink: #ff969c;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			body {
+				margin: 0;
+				background:
+					radial-gradient(
+						ellipse at 65% 0,
+						#282231 0,
+						transparent 55%
+					),
+					var(--bg);
+				color: var(--ink);
+				font:
+					15px/1.5 system-ui,
+					'Malgun Gothic',
+					sans-serif;
+				min-height: 100vh;
+			}
+			button {
+				font: inherit;
+				color: inherit;
+				border: 1px solid var(--line);
+				background: #25252d;
+				padding: 10px 16px;
+				border-radius: 8px;
+				cursor: pointer;
+			}
+			button:hover:not(:disabled) {
+				border-color: var(--gold);
+				background: #33303a;
+			}
+			button:focus-visible {
+				outline: 2px solid var(--blue);
+				outline-offset: 3px;
+			}
+			button:disabled {
+				opacity: 0.46;
+				cursor: default;
+			}
+			.primary {
+				background: var(--gold);
+				color: #21190f;
+				border-color: var(--gold);
+				font-weight: 800;
+			}
+			.primary:hover:not(:disabled) {
+				background: #ffe1a3;
+				color: #21190f;
+			}
+			header {
+				max-width: 1180px;
+				margin: auto;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				padding: 19px 24px;
+				border-bottom: 1px solid var(--line);
+			}
+			.brand {
+				font-weight: 900;
+				letter-spacing: -0.06em;
+				font-size: 23px;
+			}
+			.brand em {
+				font-style: normal;
+				color: var(--gold);
+			}
+			main {
+				max-width: 1180px;
+				margin: auto;
+				padding: 26px 24px 48px;
+			}
+			.eyebrow {
+				font-size: 12px;
+				letter-spacing: 0.19em;
+				font-weight: 800;
+				color: var(--gold);
+			}
+			h1,
+			h2,
+			h3,
+			p {
+				margin: 0;
+			}
+			h1 {
+				font-size: clamp(40px, 8vw, 92px);
+				line-height: 1.03;
+				letter-spacing: -0.09em;
+			}
+			h2 {
+				font-size: clamp(24px, 4vw, 43px);
+				letter-spacing: -0.065em;
+			}
+			h3 {
+				font-size: 20px;
+				letter-spacing: -0.04em;
+			}
+			.muted,
+			small {
+				color: var(--muted);
+			}
+			.hero {
+				min-height: 540px;
+				display: grid;
+				grid-template-columns: 1fr 1fr;
+				gap: 24px;
+				align-items: center;
+				padding: 32px 0;
+			}
+			.hero p {
+				margin: 18px 0 27px;
+				color: var(--muted);
+			}
+			.hero .eyebrow {
+				margin-bottom: 12px;
+			}
+			.actions,
+			.row {
+				display: flex;
+				gap: 8px;
+				flex-wrap: wrap;
+				align-items: center;
+			}
+			.nav {
+				margin-top: 12px;
+			}
+			.stage {
+				position: relative;
+				overflow: hidden;
+				background:
+					radial-gradient(
+						ellipse at center,
+						#3b2f46,
+						transparent 70%
+					),
+					repeating-linear-gradient(
+						115deg,
+						transparent 0 42px,
+						#ffffff0a 43px 44px
+					),
+					#15151d;
+				border: 1px solid var(--line);
+				border-radius: 14px;
+				min-height: 290px;
+				display: grid;
+				place-items: center;
+				isolation: isolate;
+			}
+			.hero .stage {
+				height: 460px;
+			}
+			.stage:after {
+				content: '';
+				position: absolute;
+				inset: auto 0 0;
+				height: 30%;
+				background: linear-gradient(transparent, #121217);
+				z-index: -1;
+			}
+			.tower {
+				width: 56%;
+				height: 85%;
+				background: linear-gradient(
+					90deg,
+					#16121c,
+					#63516b 48%,
+					#201727 50%,
+					#33293c
+				);
+				clip-path: polygon(
+					50% 0,
+					66% 15%,
+					66% 31%,
+					77% 31%,
+					77% 54%,
+					88% 54%,
+					88% 76%,
+					100% 76%,
+					100% 100%,
+					0 100%,
+					0 76%,
+					12% 76%,
+					12% 54%,
+					23% 54%,
+					23% 31%,
+					34% 31%,
+					34% 15%
+				);
+				display: grid;
+				place-items: center;
+				color: var(--gold);
+				font-size: 55px;
+				text-shadow: 0 0 30px var(--gold);
+			}
+			.panel {
+				background: var(--panel);
+				border: 1px solid var(--line);
+				border-radius: 12px;
+				padding: 18px;
+			}
+			.topline {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				gap: 12px;
+				margin-bottom: 14px;
+				flex-wrap: wrap;
+			}
+			.grid {
+				display: grid;
+				grid-template-columns: repeat(2, minmax(0, 1fr));
+				gap: 12px;
+				margin-top: 14px;
+			}
+			.choice {
+				display: grid;
+				gap: 10px;
+				justify-items: start;
+				min-height: 165px;
+			}
+			.choice.elite {
+				border-color: #815f43;
+			}
+			.battle {
+				display: grid;
+				grid-template-columns: 1fr 300px;
+				gap: 12px;
+			}
+			.enemy {
+				text-align: center;
+				padding: 16px;
+			}
+			.sigil {
+				margin: auto auto 10px;
+				width: 124px;
+				height: 124px;
+				display: grid;
+				place-items: center;
+				border: 1px solid currentColor;
+				border-radius: 26%;
+				transform: rotate(-8deg);
+				font-size: 54px;
+				font-weight: 900;
+				color: var(--gold);
+				background: #222032;
+				box-shadow:
+					0 0 60px #a16eb93f,
+					inset 0 0 40px #bf99ff22;
+			}
+			.meter {
+				height: 7px;
+				background: #37323b;
+				border-radius: 20px;
+				overflow: hidden;
+				margin: 8px 0 3px;
+			}
+			.meter i {
+				display: block;
+				height: 100%;
+				background: var(--gold);
+				transition: width 0.24s;
+			}
+			.stat {
+				padding: 9px 0;
+				border-bottom: 1px solid var(--line);
+				display: flex;
+				justify-content: space-between;
+				gap: 8px;
+			}
+			.stat strong {
+				color: var(--blue);
+			}
+			.log {
+				font-size: 13px;
+				color: var(--muted);
+				margin-top: 12px;
+				min-height: 4em;
+			}
+			.intent {
+				color: var(--pink);
+				margin-top: 5px;
+				font-size: 13px;
+			}
+			.hand {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(143px, 1fr));
+				gap: 8px;
+				margin: 10px 0;
+			}
+			.card {
+				display: grid;
+				text-align: left;
+				align-content: start;
+				gap: 8px;
+				min-height: 142px;
+				background: linear-gradient(155deg, #343241, #222229);
+				padding: 12px;
+				border-color: #514957;
+			}
+			.card b {
+				color: var(--gold);
+			}
+			.card span {
+				font-size: 13px;
+			}
+			.card.confuse {
+				border-color: #884e65;
+				background: #382631;
+			}
+			.card.confuse b {
+				color: var(--pink);
+			}
+			.notice {
+				margin: 12px 0;
+				color: var(--gold);
+				min-height: 1.5em;
+			}
+			.collection {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+				gap: 10px;
+				margin: 14px 0;
+			}
+			.collection .panel {
+				display: grid;
+				gap: 6px;
+			}
+			.badge {
+				padding: 4px 9px;
+				border: 1px solid var(--line);
+				border-radius: 20px;
+				color: var(--muted);
+				font-size: 12px;
+			}
+			.summary {
+				max-width: 630px;
+				margin: 60px auto;
+			}
+			.summary > * + * {
+				margin-top: 12px;
+			}
+			label {
+				display: block;
+				margin: 8px 0;
+			}
+			input[type='checkbox'] {
+				accent-color: var(--gold);
+			}
+			@media (max-width: 780px) {
+				.hero,
+				.battle {
+					grid-template-columns: 1fr;
+				}
+				.hero .stage {
+					height: 260px;
+					grid-row: 1;
+				}
+				.hero {
+					padding: 0;
+					min-height: 0;
+				}
+				.stage {
+					min-height: 235px;
+				}
+				.grid {
+					grid-template-columns: 1fr;
+				}
+				main {
+					padding: 16px;
+				}
+				header {
+					padding: 12px 16px;
+				}
+				.hand {
+					grid-template-columns: repeat(2, minmax(0, 1fr));
+				}
+				.card {
+					min-height: 114px;
+				}
+			}
+			@media (prefers-reduced-motion: reduce) {
+				* {
+					transition: none !important;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<div class="brand">수능의 <em>탑</em></div>
+			<button id="home" hidden>메인 화면</button>
+		</header>
+		<main id="app"></main>
+		<script>
+			'use strict';
+			const cards = {
+				outline: { n: '핵심 정리', c: 2, d: '풀이력 +8', solve: 8 },
+				focus: { n: '집중 풀이', c: 4, d: '풀이력 +16', solve: 16 },
+				scan: { n: '빠른 훑기', c: 1, d: '풀이력 +4', solve: 4 },
+				breath: { n: '심호흡', c: 0, d: '혼란 2장 제거', clear: 2 },
+				rhythm: { n: '페이스 조절', c: 1, d: '체력 12 회복', heal: 12 },
+				note: {
+					n: '오답 노트',
+					c: 3,
+					d: '풀이력 +10, 혼란 1장 제거',
+					solve: 10,
+					clear: 1,
+				},
+				infer: { n: '논리 추론', c: 3, d: '풀이력 +14', solve: 14 },
+				eraser: { n: '지우개', c: 0, d: '혼란 3장 제거', clear: 3 },
+				break: { n: '쉬는 시간', c: 2, d: '체력 25 회복', heal: 25 },
+				finish: { n: '마지막 검산', c: 5, d: '풀이력 +14', solve: 14 },
+			};
+			const starter = [
+				'outline',
+				'outline',
+				'focus',
+				'scan',
+				'scan',
+				'breath',
+				'rhythm',
+				'note',
+				'infer',
+				'eraser',
+			];
+			const subjects = [
+				{
+					n: '국어',
+					enemy: '뒤엉킨 문장',
+					symbol: '㉠',
+					patterns: [
+						['문장 뒤틀기', 'confuse', 1, 8],
+						['함정 선택지', 'confuse', 1],
+						['시간 압박', 'hit', 13],
+						['긴 지문', 'hard', 5],
+					],
+				},
+				{
+					n: '수학',
+					enemy: '극한의 루트',
+					symbol: '√',
+					patterns: [
+						['근호 전개', 'hard', 5, 9],
+						['복잡한 계산', 'drain', 2],
+						['분모의 반격', 'hit', 15],
+						['극한 도약', 'hard', 7],
+					],
+				},
+				{
+					n: '영어',
+					enemy: '미궁의 알파벳',
+					symbol: 'A',
+					patterns: [
+						['낯선 어휘', 'tax', 1, 8],
+						['빈칸 추론', 'confuse', 1],
+						['장문 독해', 'drain', 2, 12],
+						['문장 재배열', 'lock', 1],
+					],
+				},
+				{
+					n: '통합사회',
+					enemy: '삼권분립 요새',
+					symbol: '權',
+					patterns: [
+						['규칙 개정', 'lock', 1, 8],
+						['자료 추가', 'hard', 5],
+						['이해 충돌', 'hit', 14],
+						['의결 보류', 'tax', 1],
+					],
+				},
+				{
+					n: '통합과학',
+					enemy: '융합 실험체',
+					symbol: '⚛',
+					patterns: [
+						['연쇄 반응', 'combo', 10],
+						['실험 조건 변경', 'hard', 6],
+						['궤도 이탈', 'confuse', 1, 12],
+						['에너지 흡수', 'drain', 2],
+					],
+				},
+			];
+			const boss = {
+				n: '최종 시험',
+				enemy: '수능의 심판자',
+				symbol: '塔',
+				patterns: [
+					['복합 지문', 'confuse', 2, 14],
+					['통합 조건', 'hard', 9],
+					['시간 강탈', 'drain', 3, 16],
+					['교차 검증', 'tax', 2],
+					['출제 범위 확장', 'lock', 2],
+					['연쇄 실험', 'combo', 18],
+					['마지막 킬러 문항', 'hard', 12],
+					['종료 직전 경고', 'hit', 24],
+				],
+			};
+			const effectText = {
+				confuse: (n) => `혼란 ${n}장 추가`,
+				hard: (n) => `난도 +${n}`,
+				drain: (n) => `정신력 −${n}`,
+				tax: (n) => `다음 턴 카드 비용 +${n}`,
+				lock: (n) => `다음 턴 풀이 카드 최대 ${n}장`,
+				combo: (n) => `체력 −${n}, 혼란 1장 추가`,
+				hit: (n) => `체력 −${n}`,
+			};
+			const app = document.querySelector('#app');
+			const storageKey = 'suneung-tower-v1';
+			const defaults = {
+				run: null,
+				collection: [...new Set(starter)],
+				savedDeck: null,
+				history: [],
+				settings: { confirm: true },
+			};
+			let data;
+			try {
+				data = {
+					...defaults,
+					...JSON.parse(localStorage.getItem(storageKey) || '{}'),
+				};
+			} catch {
+				data = structuredClone(defaults);
+			}
+			let run = data.run,
+				view = 'home',
+				notice = '',
+				storageFailed = false;
+			const save = () => {
+				data.run = run;
+				try {
+					localStorage.setItem(storageKey, JSON.stringify(data));
+				} catch {
+					storageFailed = true;
+				}
+			};
+			const shuffle = (list) => {
+				const copy = [...list];
+				for (let i = copy.length - 1; i > 0; i--) {
+					const j = Math.floor(Math.random() * (i + 1));
+					[copy[i], copy[j]] = [copy[j], copy[i]];
+				}
+				return copy;
+			};
+			const button = (label, action, cls = '', disabled = false) =>
+				`<button class="${cls}" data-act="${action}" ${disabled ? 'disabled' : ''}>${label}</button>`;
+			const number = (x) => Number(x) || 0;
+			function go(next) {
+				view = next;
+				notice = '';
+				render();
+			}
+			function newRun(useSaved = false) {
+				if (
+					run &&
+					data.settings.confirm &&
+					!confirm('진행 중인 시험을 새 시험으로 바꿀까요?')
+				)
+					return;
+				run = {
+					step: 0,
+					score: 0,
+					hp: 100,
+					deck: [
+						...(useSaved && data.savedDeck
+							? data.savedDeck
+							: starter),
+					],
+					phase: 'map',
+					battle: null,
+					results: [],
+				};
+				save();
+				go('run');
+			}
+			function enemy() {
+				return run.step === 15 ? boss : subjects[run.step % 5];
+			}
+			function chapter() {
+				return ['기초', '응용', '심화', '최종 시험'][
+					Math.floor(run.step / 5)
+				];
+			}
+			const quizModes = [
+				'18초 안에 문장 따라 쓰기',
+				'암산으로 계산한 답 입력',
+				'영어 단어의 뜻에 맞는 번호 선택',
+				'O·X 중 하나 선택',
+				'생명·물리·화학·지구과학을 연결해 결론 선택',
+			];
+			const questionBank = [
+				[
+					'아는 길도 물어 가라.',
+					'가는 말이 고와야 오는 말이 곱다.',
+					'작은 물방울이 모여 큰 강을 이룬다.',
+				],
+				[],
+				[
+					['abundant', ['부족한', '풍부한', '조용한'], 1],
+					['reluctant', ['열정적인', '정확한', '꺼리는'], 2],
+					['preserve', ['보존하다', '비교하다', '거절하다'], 0],
+				],
+				[
+					[
+						'한 가지를 선택하면서 포기한 대안 중 가장 가치 있는 것이 기회비용이다.',
+						['O', 'X'],
+						0,
+					],
+					[
+						'삼권분립은 입법·행정·사법 권력을 한 기관에 집중하는 제도이다.',
+						['O', 'X'],
+						1,
+					],
+					[
+						'재생 가능 에너지의 발전량은 날씨와 계절에 따라 달라질 수 있다.',
+						['O', 'X'],
+						0,
+					],
+				],
+				[
+					[
+						'햇빛을 받는 연못에서 물속 식물의 광합성이 활발해졌다. 다른 조건이 같다면 어떤 변화가 예상되는가?',
+						[
+							'이산화 탄소 감소, 산소 증가',
+							'이산화 탄소 증가, 산소 감소',
+							'두 기체 모두 감소',
+						],
+						0,
+					],
+					[
+						'지진으로 바닷물이 크게 움직여 해일이 발생했다. 해일이 해안에 닿을 때 옳은 설명은?',
+						[
+							'해안 생태계에는 영향이 없다',
+							'파동이 에너지를 전달해 해안 생물의 서식지를 바꿀 수 있다',
+							'바닷물은 충돌할 때 새로운 원소로 바뀐다',
+						],
+						1,
+					],
+					[
+						'대기 중 이산화 탄소가 늘어 지표의 온실 효과가 강해졌다. 이어질 수 있는 변화는?',
+						[
+							'지표가 방출하는 적외선을 대기가 전혀 흡수하지 않는다',
+							'대기 온도가 반드시 내려간다',
+							'평균 기온 상승으로 일부 생물의 분포가 달라질 수 있다',
+						],
+						2,
+					],
+				],
+			];
+			function currentQuiz() {
+				const b = run.battle;
+				if (run.step >= 15 || (b.turn - 1) % 3 !== 0) return null;
+				const subject = run.step % 5,
+					index = (Math.floor(run.step / 5) + (b.turn - 1) / 3) % 3;
+				if (subject === 0)
+					return {
+						subject,
+						prompt: questionBank[0][index],
+						seconds: 18,
+					};
+				if (subject === 1) {
+					const a = 12 + index * 3,
+						multiplier = b.elite ? 7 : 4,
+						add = 8 + index;
+					return {
+						subject,
+						prompt: `${a} × ${multiplier} + ${add} = ?`,
+						answer: a * multiplier + add,
+					};
+				}
+				const [prompt, options, answer] = questionBank[subject][index];
+				return { subject, prompt, options, answer };
+			}
+			function quizState() {
+				const b = run.battle;
+				return b.quiz?.turn === b.turn ? b.quiz : null;
+			}
+			function startTyping() {
+				const quiz = currentQuiz();
+				if (!quiz?.seconds || quizState()) return;
+				run.battle.quiz = {
+					turn: run.battle.turn,
+					deadline: Date.now() + quiz.seconds * 1000,
+				};
+				save();
+				render();
+				document.querySelector('#quiz-answer')?.focus();
+			}
+			function answerQuiz(value) {
+				const quiz = currentQuiz(),
+					b = run.battle,
+					state = quizState();
+				if (!quiz || state?.result || (quiz.seconds && !state)) return;
+				const typed = String(value).trim().normalize('NFC');
+				const expired = quiz.seconds && Date.now() >= state.deadline;
+				const correct =
+					!expired &&
+					(quiz.seconds
+						? typed === quiz.prompt
+						: quiz.options
+							? value === quiz.answer
+							: /^[+-]?\d+$/.test(typed) &&
+								Number(typed) === quiz.answer);
+				b.quiz = {
+					turn: b.turn,
+					result: expired
+						? '시간 초과'
+						: correct
+							? '정답 · 풀이력 +5'
+							: '오답',
+				};
+				b.log.push(b.quiz.result);
+				if (correct) {
+					b.solved += 5;
+					if (b.solved >= b.difficulty) finish(true);
+				}
+				save();
+				render();
+			}
+			function renderQuiz() {
+				const quiz = currentQuiz();
+				if (!quiz) return '';
+				const state = quizState();
+				const prompt =
+					quiz.seconds && !state
+						? '시작을 누르면 문장이 표시됩니다. 띄어쓰기와 문장부호까지 입력하세요.'
+						: quiz.prompt;
+				let controls;
+				if (state?.result)
+					controls = `<p role="status">${state.result}</p>`;
+				else if (quiz.seconds && !state)
+					controls = button(
+						'타자 시작 · 18초',
+						'quiz-start',
+						'primary',
+					);
+				else if (quiz.options)
+					controls = `<div class="actions">${quiz.options.map((option, i) => button(quiz.subject === 3 ? option : `${i + 1}. ${option}`, 'quiz-choice:' + i)).join('')}</div>`;
+				else
+					controls = `<form id="quiz-form"><label for="quiz-answer">답 입력</label><div class="actions"><input id="quiz-answer" name="answer" autocomplete="off" ${quiz.subject === 1 ? 'inputmode="numeric"' : ''} required><button type="submit">제출</button></div></form>`;
+				const timer =
+					quiz.seconds && state && !state.result
+						? `<small id="quiz-timer">남은 시간 ${Math.max(0, Math.ceil((state.deadline - Date.now()) / 1000))}초</small>`
+						: '';
+				return `<section class="panel" style="margin-top:12px"><h3>${subjects[quiz.subject].n} 문제</h3><p class="muted">정답이면 풀이력 +5 · 이번 턴에 한 번 도전</p><p style="margin:8px 0">${prompt}</p>${timer}${controls}</section>`;
+			}
+			function enemyIntent() {
+				const b = run.battle,
+					patterns = enemy().patterns;
+				const [name, type, value, extraDamage = 0] =
+					patterns[(b.turn - 1) % patterns.length];
+				const baseDamage =
+					type === 'hit' || type === 'combo' ? value : extraDamage;
+				const bonus =
+					run.step < 15
+						? Math.floor(run.step / 5) * 2 + (b.elite ? 9 : 0)
+						: 0;
+				const hpDamage = baseDamage ? baseDamage + bonus : 0;
+				const detail =
+					type === 'hit' || type === 'combo'
+						? effectText[type](hpDamage)
+						: [
+								hpDamage && effectText.hit(hpDamage),
+								effectText[type](value),
+							]
+								.filter(Boolean)
+								.join(', ');
+				return { name, type, value, hpDamage, detail };
+			}
+			function battleStart(elite) {
+				const quarter = Math.floor(run.step / 5);
+				const difficulty =
+					run.step === 15
+						? 140
+						: 32 +
+							quarter * 12 +
+							(run.step % 5) * 3 +
+							(elite ? 16 : 0);
+				run.battle = {
+					elite,
+					mental: 20,
+					solved: 0,
+					difficulty,
+					confusion: 0,
+					turn: 1,
+					maxTurn: run.step === 15 ? 9 : 7,
+					draw: shuffle(run.deck),
+					hand: [],
+					discard: [],
+					tax: 0,
+					lock: 0,
+					played: 0,
+					log: ['시험을 시작했습니다.'],
+				};
+				run.phase = 'battle';
+				draw();
+				save();
+				render();
+			}
+			function draw() {
+				const b = run.battle;
+				const count = Math.max(0, 6 - b.confusion);
+				while (b.hand.length < count) {
+					if (!b.draw.length) {
+						b.draw = shuffle(b.discard);
+						b.discard = [];
+					}
+					if (!b.draw.length) break;
+					b.hand.push(b.draw.pop());
+				}
+			}
+			function addConfusion(amount) {
+				const b = run.battle;
+				b.confusion = Math.min(6, b.confusion + amount);
+				while (b.hand.length + b.confusion > 6)
+					b.discard.push(b.hand.pop());
+			}
+			function clearConfusion(amount) {
+				const b = run.battle;
+				if (!b.confusion) return;
+				b.confusion = Math.max(0, b.confusion - amount);
+				if (!b.confusion) {
+					const recovered = Math.min(40, 100 - run.hp);
+					run.hp += recovered;
+					b.log.push(
+						`혼란을 모두 제거했습니다. 체력 +${recovered} (최대 40)`,
+					);
+				}
+			}
+			function damage(amount) {
+				const was = run.hp;
+				run.hp = Math.max(0, was - amount);
+				if (was > 0 && run.hp === 0) addConfusion(2);
+			}
+			function available(card) {
+				const b = run.battle;
+				if (b.mental < card.c + b.tax) return false;
+				if (card.solve && b.lock && b.played >= b.lock) return false;
+				return !!(
+					card.solve ||
+					(card.clear && b.confusion) ||
+					(card.heal && run.hp < 100)
+				);
+			}
+			function play(index) {
+				const b = run.battle,
+					id = b.hand[index],
+					card = cards[id];
+				if (!card || !available(card)) return;
+				b.mental -= card.c + b.tax;
+				b.hand.splice(index, 1);
+				b.discard.push(id);
+				b.log.push(`${card.n} 사용`);
+				if (card.solve) {
+					b.solved += card.solve;
+					b.played++;
+				}
+				if (card.clear) clearConfusion(card.clear);
+				if (card.heal) run.hp = Math.min(100, run.hp + card.heal);
+				if (b.solved >= b.difficulty) finish(true);
+				save();
+				render();
+			}
+			function endTurn() {
+				const b = run.battle;
+				if (b.turn === b.maxTurn) {
+					finish(false);
+					save();
+					render();
+					return;
+				}
+				const { name, type, value, hpDamage, detail } = enemyIntent();
+				b.tax = 0;
+				b.lock = 0;
+				b.played = 0;
+				b.discard.push(...b.hand);
+				b.hand = [];
+				if (type === 'confuse') addConfusion(value);
+				if (type === 'hard') b.difficulty += value;
+				if (type === 'drain') b.mental = Math.max(0, b.mental - value);
+				if (type === 'tax') b.tax = value;
+				if (type === 'lock') b.lock = value;
+				if (hpDamage) damage(hpDamage);
+				if (type === 'combo') addConfusion(1);
+				b.log.push(`${name} · ${detail}`);
+				b.turn++;
+				draw();
+				save();
+				render();
+			}
+			function finish(won) {
+				const b = run.battle;
+				const points = won
+					? run.step === 15
+						? 30
+						: b.elite
+							? 15
+							: 10
+					: 0;
+				run.score += points;
+				run.results.push({ subject: enemy().n, won, points });
+				if (run.step === 15) {
+					run.phase = 'result';
+					run.passed = won && run.score >= 135;
+					data.history.unshift({
+						score: run.score,
+						passed: run.passed,
+						date: new Date().toISOString(),
+					});
+					data.history = data.history.slice(0, 20);
+					return;
+				}
+				run.phase = 'reward';
+				const pool = Object.keys(cards).filter(
+					(id) => id !== 'finish' || b.elite,
+				);
+				run.reward = won ? shuffle(pool).slice(0, 3) : [];
+				if (
+					won &&
+					b.elite &&
+					!run.reward.includes('finish') &&
+					Math.random() < 0.45
+				)
+					run.reward[0] = 'finish';
+			}
+			function advance(id) {
+				if (id && run.reward.includes(id) && run.deck.length < 20) {
+					run.deck.push(id);
+					if (!data.collection.includes(id)) data.collection.push(id);
+				}
+				run.step++;
+				run.battle = null;
+				run.phase = 'map';
+				save();
+				render();
+			}
+			function renderHome() {
+				return `<section class="hero"><div><div class="eyebrow">로그라이크 덱빌딩 RPG</div><h1>수능의 탑</h1><p>교복을 입고 사인펜을 들어라.<br>다섯 과목을 돌파해 최종 시험에 도전하라.</p><div class="actions">${run ? button('이어하기', 'continue', 'primary') + button('새로 시작하기', 'new') : button('시작하기', 'start', 'primary')}</div>${renderQuickGuide()}<div class="actions nav">${button('카드 도감', 'collection')}${button('덱 보관함', 'deck')}${button('플레이 기록', 'history')}${button('설정', 'settings')}</div></div><div class="stage" aria-hidden="true"><div class="tower">塔</div></div></section>`;
+			}
+			function renderQuickGuide() {
+				return `<section class="panel" style="margin-top:14px" aria-labelledby="quick-guide">
+    <h3 id="quick-guide">플레이 방법</h3>
+    <ol style="padding-left:24px;margin:8px 0">
+      <li><strong>카드 클릭</strong> · 정신력을 써서 풀이력을 쌓으세요.</li>
+      <li><strong>과목 문제 풀기</strong> · 일반·엘리트 전투 1·4·7턴에 출제됩니다. 정답이면 풀이력 +5.</li>
+      <li><strong>공격 예고 확인 → 턴 종료</strong> · 풀이력이 난도에 도달하면 승리합니다.</li>
+    </ol>
+  </section>`;
+			}
+			function renderGuide() {
+				return `<section class="panel" style="margin-top:12px"><h2>과목별 조작</h2><ul>${subjects.map((subject, i) => `<li><strong>${subject.n}</strong> · ${quizModes[i]}</li>`).join('')}</ul></section>`;
+			}
+			function renderMap() {
+				const e = enemy(),
+					final = run.step === 15;
+				return `<div class="topline"><span class="eyebrow">${Math.floor(run.step / 5) + 1}분기 · ${chapter()}</span><span class="badge">총점 ${run.score} · 체력 ${run.hp} · 덱 ${run.deck.length}/20</span></div><h2>${e.n}</h2><p class="muted">${final ? '최종 보스를 쓰러뜨리고 총점 135점에 도달하세요.' : `과목 ${(run.step % 5) + 1}/5 · ${e.enemy}`}</p><div class="grid"><div class="panel choice"><h3>${final ? '최종 시험' : '일반 전투'}</h3><p class="muted">${final ? '변형 패턴 8개 · 9턴 제한 · 성공 +30점' : '기본 난도 · 성공 +10점 · 카드 보상'}</p>${button(final ? '시험 시작' : '일반 전투 시작', 'normal', 'primary')}</div>${final ? '' : `<div class="panel choice elite"><h3>엘리트 전투</h3><p class="muted">난도 +16 · 공격 피해 +9 · 성공 +15점 · 고급 카드 등장</p>${button('엘리트 전투 시작', 'elite')}</div>`}</div>`;
+			}
+			function renderBattle() {
+				const b = run.battle,
+					e = enemy(),
+					{ name, detail } = enemyIntent();
+				const hand = b.hand.map((id, i) => {
+					const c = cards[id];
+					return button(
+						`<b>${c.n}</b><span>정신력 ${c.c + b.tax}</span><small>${c.d}</small>`,
+						'card:' + i,
+						'card',
+						!available(c),
+					);
+				});
+				for (let i = 0; i < b.confusion; i++)
+					hand.push(
+						`<div class="card confuse"><b>혼란</b><small>손패 한 칸을 차지합니다.</small></div>`,
+					);
+				const progress = Math.min(
+					100,
+					Math.round((b.solved / b.difficulty) * 100),
+				);
+				return `<div class="topline"><span class="eyebrow">${Math.floor(run.step / 5) + 1}분기 · ${e.n}${b.elite ? ' · 엘리트' : ''}</span><span class="badge">${b.turn} / ${b.maxTurn}턴 · 총점 ${run.score}</span></div><div class="battle"><div class="stage"><div class="enemy"><div class="sigil" aria-hidden="true">${e.symbol}</div><h2>${e.enemy}</h2><p class="intent">${b.turn === b.maxTurn ? '마지막 턴 · 종료 시 채점' : `예고 ${name} · ${detail}`}</p></div></div><aside class="panel"><h3>수험생</h3><div class="stat"><span>체력</span><strong>${run.hp} / 100</strong></div><div class="stat"><span>정신력</span><strong>${b.mental}</strong></div><div class="stat"><span>풀이력 / 난도</span><strong>${b.solved} / ${b.difficulty}</strong></div><div class="meter" role="progressbar" aria-label="문제 풀이 진행률" aria-valuenow="${progress}" aria-valuemin="0" aria-valuemax="100"><i style="width:${progress}%"></i></div><div class="log" aria-live="polite">${b.log.slice(-3).join('<br>')}</div></aside></div>${renderQuiz()}<div class="topline" style="margin:16px 0 0"><h3>손패 <small>${b.hand.length + b.confusion}/6</small></h3><span class="badge">뽑기 ${b.draw.length} · 버림 ${b.discard.length}${b.lock ? ` · 풀이 ${b.played}/${b.lock}장` : ''}</span></div><div class="hand">${hand.join('') || '<p class="muted">사용할 카드가 없습니다.</p>'}</div><div class="actions">${button('체력 −10 → 정신력 +10', 'trade', '', run.hp < 10)}${button('혼란 1장 제거 · 턴 종료', 'steady', '', !b.confusion)}${button('턴 종료', 'end', 'primary')}</div>`;
+			}
+			function renderRun() {
+				if (!run) return renderHome();
+				if (run.phase === 'map') return renderMap();
+				if (run.phase === 'battle') return renderBattle();
+				if (run.phase === 'reward') {
+					const last = run.results.at(-1);
+					return `<section class="summary panel"><div class="eyebrow">${last.subject} 전투 결과</div><h2>${last.won ? '문제 해결 성공' : '시간 초과'}</h2><p>획득 ${last.points}점 · 총점 ${run.score}</p>${run.reward.length && run.deck.length < 20 ? `<p class="muted">카드 한 장을 덱에 추가할 수 있습니다.</p><div class="collection">${run.reward.map((id) => button(`<b>${cards[id].n}</b><span>정신력 ${cards[id].c}</span><small>${cards[id].d}</small>`, 'reward:' + id, 'card')).join('')}</div>` : ''}${button(run.reward.length && run.deck.length < 20 ? '보상 건너뛰기' : '다음 시험', 'advance', 'primary')}</section>`;
+				}
+				return `<section class="summary panel"><div class="eyebrow">최종 시험 결과</div><h2>${run.passed ? '수능의 탑 정복' : '최종 시험 미통과'}</h2><p>총점 ${run.score}점 / 통과 기준 135점</p><p class="muted">최종 보스 ${run.results.at(-1).won ? '격파' : '미격파'}</p>${button('메인 화면', 'home', 'primary')}</section>`;
+			}
+			function renderLibrary() {
+				if (view === 'history')
+					return `<h2>플레이 기록</h2><div class="collection">${data.history.map((h) => `<div class="panel"><strong>${h.passed ? '통과' : '미통과'} · ${number(h.score)}점</strong><small>${new Date(h.date).toLocaleDateString('ko-KR')}</small></div>`).join('') || '<p class="muted">최종 시험을 마치면 기록이 남습니다.</p>'}</div>`;
+				if (view === 'settings')
+					return `<h2>설정</h2><div class="panel" style="margin-top:14px"><label><input id="confirm-setting" type="checkbox" ${data.settings.confirm ? 'checked' : ''}> 새 시험 시작 전 확인</label><p class="muted">진행 상황, 카드 수집, 덱은 이 브라우저에 저장됩니다.</p></div>`;
+				const deck = view === 'deck',
+					list = deck ? data.savedDeck || [] : Object.keys(cards);
+				return `<h2>${deck ? '덱 보관함' : '카드 도감'}</h2><p class="muted">${deck ? `저장 덱 ${list.length}/20장` : `수집 ${data.collection.length}/10종`}</p>${deck ? `<div class="actions" style="margin-top:10px">${button('현재 덱 저장', 'save-deck', '', !run)}${button('저장 덱으로 시작', 'saved-start', 'primary', !data.savedDeck)}</div>` : ''}<div class="collection">${list
+					.filter((id) => cards[id])
+					.map((id) => {
+						const c = cards[id],
+							owned = deck || data.collection.includes(id);
+						return `<div class="panel"><b>${owned ? c.n : '미수집 카드'}</b><small>${owned ? `정신력 ${c.c} · ${c.d}` : '전투 보상에서 발견할 수 있습니다.'}</small></div>`;
+					})
+					.join('')}</div>`;
+			}
+			function render() {
+				document.querySelector('#home').hidden = view === 'home';
+				app.innerHTML =
+					(view === 'home'
+						? renderHome() + renderGuide()
+						: view === 'run'
+							? renderRun()
+							: renderLibrary()) +
+					(notice || storageFailed
+						? `<p class="notice" role="status">${notice || '이 브라우저에서 저장 공간을 사용할 수 없습니다.'}</p>`
+						: '');
+			}
+			document.addEventListener('click', (event) => {
+				if (event.target.id === 'home') {
+					go('home');
+					return;
+				}
+				const target = event.target.closest('button[data-act]');
+				if (!target || target.disabled) return;
+				const [action, arg] = target.dataset.act.split(':');
+				if (
+					[
+						'home',
+						'collection',
+						'deck',
+						'history',
+						'settings',
+					].includes(action)
+				) {
+					go(action);
+					return;
+				}
+				if (action === 'start') {
+					if (run && run.phase !== 'result') go('run');
+					else newRun();
+					return;
+				}
+				if (action === 'continue') {
+					if (run) go('run');
+					return;
+				}
+				if (action === 'new' || action === 'saved-start') {
+					newRun(action === 'saved-start');
+					return;
+				}
+				if (action === 'save-deck' && run) {
+					data.savedDeck = [...run.deck];
+					save();
+					notice = '현재 덱을 저장했습니다.';
+					render();
+					return;
+				}
+				if (view !== 'run' || !run) return;
+				if (
+					run.phase === 'map' &&
+					['normal', 'elite'].includes(action)
+				) {
+					battleStart(action === 'elite');
+					return;
+				}
+				if (
+					run.phase === 'reward' &&
+					['advance', 'reward'].includes(action)
+				) {
+					advance(arg);
+					return;
+				}
+				if (run.phase !== 'battle') return;
+				if (action === 'quiz-start') startTyping();
+				if (action === 'quiz-choice') answerQuiz(Number(arg));
+				if (action === 'card') play(Number(arg));
+				if (action === 'trade' && run.hp >= 10) {
+					damage(10);
+					run.battle.mental += 10;
+					run.battle.log.push(
+						'체력 10을 정신력 10으로 전환했습니다.',
+					);
+					save();
+					render();
+				}
+				if (action === 'steady' && run.battle.confusion) {
+					clearConfusion(1);
+					endTurn();
+				}
+				if (action === 'end') endTurn();
+			});
+			document.addEventListener('submit', (event) => {
+				if (event.target.id !== 'quiz-form') return;
+				event.preventDefault();
+				if (view === 'run' && run?.phase === 'battle')
+					answerQuiz(event.target.elements.answer.value);
+			});
+			setInterval(() => {
+				if (view !== 'run' || run?.phase !== 'battle') return;
+				const timer = document.querySelector('#quiz-timer'),
+					state = quizState();
+				if (!timer || !state?.deadline || state.result) return;
+				const remaining = Math.ceil(
+					(state.deadline - Date.now()) / 1000,
+				);
+				if (remaining <= 0) answerQuiz('');
+				else timer.textContent = `남은 시간 ${remaining}초`;
+			}, 250);
+			document.addEventListener('change', (event) => {
+				if (event.target.id === 'confirm-setting') {
+					data.settings.confirm = event.target.checked;
+					save();
+				}
+			});
+			render();
+		</script>
+	</body>
+</html>
